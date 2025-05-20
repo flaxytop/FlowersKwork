@@ -7,9 +7,11 @@ using Wlowers.API.Data;
 using Microsoft.EntityFrameworkCore.Internal;
 using Flowers.Services;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Flowers.Areas.Admin.Pages
 {
+    [Authorize(Policy = "admin")]
     public class DeleteModel(IProductService productService, ICategoryService categoryService) : PageModel
     {
         [BindProperty]

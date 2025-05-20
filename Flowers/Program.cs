@@ -16,16 +16,9 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
-//builder.Services.AddDbContext<ApplicationDbContext>(options =>
-//    options.UseNpgsql(builder.Configuration.GetConnectionString("Npsql")));
-
-
-
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("UsersConnection")));
+  options.UseNpgsql(builder.Configuration.GetConnectionString("Npsql")));
 
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("ApiConnection")));
 
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => {
@@ -72,7 +65,7 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization(opt =>
 {
-    opt.AddPolicy("admin", p => p.RequireClaim(ClaimTypes.Role, "admin"));
+    opt.AddPolicy("admin", p => p.RequireRole("admin"));
 });
 
 // HTTP-клиент для API
@@ -85,12 +78,16 @@ builder.Services.AddHttpClient<ICategoryService, ApiCategoryService>(opt
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession();
 builder.Services.AddControllersWithViews();
+builder.Services.AddRazorPages();
 
 // Register AuthService and HttpContextAccessor
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
+
+// Initialize admin user
+await DbInit.SetupIdentityAdmin(app);
 
 // Add middleware to extract JWT from cookie
 app.Use(async (context, next) =>
@@ -121,6 +118,11 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseSession();
+
+app.MapRazorPages();
+app.MapControllerRoute(
+    name: "areas",
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
 app.MapControllerRoute(
     name: "default",

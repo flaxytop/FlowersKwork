@@ -5,13 +5,14 @@ using System.Threading.Tasks;
 using Flowers.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-
 using Flowers.Domain.Entities;
 using Flowers.Services;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Flowers.Areas.Admin.Pages
 {
+    [Authorize(Policy = "admin")]
     public class EditModel(IProductService productService, ICategoryService categoryService) : PageModel
     {
         [BindProperty]

@@ -10,9 +10,11 @@ using Flowers.Entities;
 using Flowers.Domain.Entities;
 using Flowers.Services;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Flowers.Areas.Admin.Pages
 {
+    [Authorize(Policy = "admin")]
     public class DetailsModel(IProductService productService, ICategoryService categoryService) : PageModel
     {
         [BindProperty]
@@ -31,7 +33,7 @@ namespace Flowers.Areas.Admin.Pages
                 return NotFound();
             }
 
-            // Загружаем категории
+            // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
             var categoryListData = await categoryService.GetCategoryListAsync();
             ViewData["GroupName"] = new SelectList(categoryListData.Data, "Id",
             "GroupName");

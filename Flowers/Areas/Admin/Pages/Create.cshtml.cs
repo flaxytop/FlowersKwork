@@ -1,12 +1,13 @@
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Flowers.Domain.Entities;
 using Flowers.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Flowers.Areas.Admin.Pages
 {
+    [Authorize(Policy = "admin")]
     public class CreateModel(ICategoryService categoryService, IProductService productService) : PageModel
     {
      
