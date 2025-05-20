@@ -1,0 +1,25 @@
+@model Flowers.Entities.ApplicationUser
+@{
+    ViewData["Title"] = "Информация о пользователе";
+}
+
+<h2>Информация о пользователе</h2>
+<table class="table table-bordered">
+    <tr><th>ID</th><td>@Model.Id</td></tr>
+    <tr><th>Email</th><td>@Model.Email</td></tr>
+    <tr><th>Имя пользователя</th><td>@Model.UserName</td></tr>
+    <tr><th>Роль</th><td>@Model.Role</td></tr>
+    <tr><th>MimeType</th><td>@Model.MimeType</td></tr>
+    <tr><th>Аватар</th>
+        <td>
+            @if (Model.Avatar != null)
+            {
+                <img src="/Account/UserAvatar/@Model.Id" width="100" />
+            }
+            else
+            {
+                <span>Нет аватара</span>
+            }
+        </td>
+    </tr>
+</table> 
